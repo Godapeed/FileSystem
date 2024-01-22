@@ -1,4 +1,7 @@
+const defaultPath = "C:/Users/Кирилл//Desktop/Стажировка/FileSystem/home";
+
 const checkPath = require("./checkPath");
+const isPathAllowed = require("./isPathAllowed");
 
 const fs = require("fs");
 const path = require("path");
@@ -13,6 +16,7 @@ function getPathInfo(filepath, onlyFolders = false, onlyFiles = false) {
 
       const info = {
         data: {
+          path: filepath,
           name: path.basename(filepath),
           isFolder: stats.isDirectory(),
           size: stats.size,
@@ -45,7 +49,13 @@ function getPathInfo(filepath, onlyFolders = false, onlyFiles = false) {
                 });
               }
 
-              info.data.children = files.map((file) => path.basename(file));
+              info.data.children = files.reduce((children, file) => {
+                const absolutePath = filepath + "/" + file;
+                if (isPathAllowed(absolutePath) === "Путь разрешен") {
+                  children.push(path.basename(file));
+                }
+                return children;
+              }, []);
 
               resolve(info);
             })
@@ -63,6 +73,10 @@ function getPathInfo(filepath, onlyFolders = false, onlyFiles = false) {
 }
 
 function doCheck(directoryPath, onlyFolders = false, onlyFiles = false) {
+  if (directoryPath === "") {
+    directoryPath = defaultPath;
+  }
+  directoryPath = path.resolve(directoryPath).replace(/\\/g, '/').replace(/\/\//g, '/');
   return checkPath(directoryPath)
     .then(() => {
       return getPathInfo(directoryPath, onlyFolders, onlyFiles);
@@ -84,5 +98,6 @@ function doCheck(directoryPath, onlyFolders = false, onlyFiles = false) {
       return pathInfo;
     });
 }
+
 
 module.exports = doCheck;

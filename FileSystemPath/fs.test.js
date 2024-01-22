@@ -1,5 +1,6 @@
 const doCheck = require("./fs");
 
+defaultpath = "";
 path1 = "./products/category/123";
 path2 = "./products/category/category1";
 path3 = "./products/category/category2";
@@ -11,8 +12,20 @@ path8 = "./contact/contact.txt";
 path9 = "./contact/dffdf";
 path10 = "./contact/d.txt";
 
+Received0 = {
+  data: {
+    path: "C:/Users/Кирилл/Desktop/Стажировка/FileSystem/home",
+    name: "home",
+    isFolder: true,
+    size: 0,
+    created: "2023-12-08T13:21:06.725Z",
+    updated: "2023-12-08T13:22:36.292Z",
+    children: ["package.json"],
+  },
+};
 Received1 = {
   data: {
+    path: "C:/Users/Кирилл/Desktop/Стажировка/FileSystem/products/category/123",
     name: "123",
     isFolder: true,
     size: 0,
@@ -29,6 +42,7 @@ Received3 = {
 };
 Received4 = {
   data: {
+    path: "C:/Users/Кирилл/Desktop/Стажировка/FileSystem/home",
     name: "home",
     isFolder: true,
     size: 0,
@@ -39,6 +53,7 @@ Received4 = {
 };
 Received5 = {
   data: {
+    path: "C:/Users/Кирилл/Desktop/Стажировка/FileSystem/products",
     name: "products",
     isFolder: true,
     size: 0,
@@ -49,29 +64,36 @@ Received5 = {
 };
 Received6 = {
   data: {
+    path: "C:/Users/Кирилл/Desktop/Стажировка/FileSystem/products/category",
     name: "category",
     isFolder: true,
     size: 0,
     created: "2023-12-08T13:25:41.433Z",
     updated: "2023-12-08T13:45:43.234Z",
-    children: ["123", "category1", "category2", "main.txt"],
+    children: ["123", "main.txt"],
   },
 };
 Received7 = {
-  data: {"name":"about.txt",
-  "isFolder":false,
-  "size":11,
-  "created":"2023-12-08T13:26:58.616Z",
-  "updated":"2023-12-08T13:27:05.651Z",
-  "children":[]}
+  data: {
+    path: "C:/Users/Кирилл/Desktop/Стажировка/FileSystem/about/about.txt",
+    name:"about.txt",
+    isFolder:false,
+    size:11,
+    created:"2023-12-08T13:26:58.616Z",
+    updated:"2023-12-08T13:27:05.651Z",
+    children:[]
+  }
 };
 Received8 = {
-  data: {"name":"contact.txt",
-  "isFolder":false,
-  "size":84,
-  "created":"2023-12-08T13:27:31.427Z",
-  "updated":"2023-12-08T13:28:20.242Z",
-  "children":[]}
+  data: {
+    path: "C:/Users/Кирилл/Desktop/Стажировка/FileSystem/contact/contact.txt",
+    name:"contact.txt",
+    isFolder:false,
+    size:84,
+    created:"2023-12-08T13:27:31.427Z",
+    updated:"2023-12-08T13:28:20.242Z",
+    children:[]
+  }
 };
 Received9 = {
   data: null,
@@ -79,6 +101,10 @@ Received9 = {
 Received10 = {
   data: null,
 };
+
+test(0, async () => {
+  expect(JSON.stringify(await doCheck(defaultpath))).toBe(JSON.stringify(Received0));
+});
 
 test(1, async () => {
   expect(JSON.stringify(await doCheck(path1))).toBe(JSON.stringify(Received1));
