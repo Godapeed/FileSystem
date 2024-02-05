@@ -1,0 +1,19 @@
+{
+    "defaultPath": "C:/Users/Кирилл//Desktop/Стажировка/FileSystem/home",
+    "goodPaths": [
+        "C:/Users/Кирилл/Desktop/Стажировка/FileSystem/home",
+        "C:/Users/Кирилл/Desktop/Стажировка/FileSystem/123.txt",
+        "C:/Users/Кирилл/Desktop/Стажировка/FileSystem/products",
+        "C:/Users/Кирилл/Desktop/Стажировка/FileSystem/about",
+        "C:/Users/Кирилл/Desktop/Стажировка/FileSystem/contact"
+    ],
+    "badPaths": [
+        "C:/Users/Кирилл/Desktop/Стажировка/FileSystem/products/category/category1"
+    ],
+    "invisiblePaths": [
+        "C:/Users/Кирилл/Desktop/Стажировка/FileSystem/products/category/category2"
+    ],
+    "goodPathsRegex": "^C:\/Users\/Кирилл\/Desktop\/Стажировка\/FileSystem\/(home|products|about|contact).*$",
+    "badPathsRegex": "^C:\/Users\/Кирилл\/Desktop\/Стажировка\/FileSystem\/products\/category\/category1$",
+    "invisiblePathsRegex": "^C:\/Users\/Кирилл\/Desktop\/Стажировка\/FileSystem\/products\/category\/category2$"
+}

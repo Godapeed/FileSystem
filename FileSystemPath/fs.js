@@ -1,10 +1,19 @@
-const defaultPath = "C:/Users/Кирилл//Desktop/Стажировка/FileSystem/home";
-
 const checkPath = require("./checkPath");
-const isPathAllowed = require("./isPathAllowed");
 
 const fs = require("fs");
 const path = require("path");
+
+const settingsData = fs.readFileSync("C:/Users/Кирилл/Desktop/Стажировка/FileSystem/FileSystemPath/settings.json");
+const settings = JSON.parse(settingsData);
+
+const defaultPath = settings.defaultPath;
+
+const goodPaths = settings.goodPaths;
+const badPaths = settings.badPaths;
+const invisiblePaths = settings.invisiblePaths;
+const goodPathsRegex = settings.goodPathsRegex;
+const badPathsRegex = settings.badPathsRegex;
+const invisiblePathsRegex = settings.invisiblePathsRegex;
 
 function getPathInfo(filepath, onlyFolders = false, onlyFiles = false) {
   return new Promise((resolve, reject) => {
@@ -51,7 +60,7 @@ function getPathInfo(filepath, onlyFolders = false, onlyFiles = false) {
 
               info.data.children = files.reduce((children, file) => {
                 const absolutePath = filepath + "/" + file;
-                if (isPathAllowed(absolutePath) === "Путь разрешен") {
+                if (checkPath(absolutePath, goodPaths, badPaths, invisiblePaths, goodPathsRegex, badPathsRegex, invisiblePathsRegex) === "Путь разрешен") {
                   children.push(path.basename(file));
                 }
                 return children;
@@ -72,32 +81,27 @@ function getPathInfo(filepath, onlyFolders = false, onlyFiles = false) {
   });
 }
 
-function doCheck(directoryPath, onlyFolders = false, onlyFiles = false) {
+async function doCheck(directoryPath, onlyFolders = false, onlyFiles = false) {
   if (directoryPath === "") {
     directoryPath = defaultPath;
   }
   directoryPath = path.resolve(directoryPath).replace(/\\/g, '/').replace(/\/\//g, '/');
-  return checkPath(directoryPath)
-    .then(() => {
-      return getPathInfo(directoryPath, onlyFolders, onlyFiles);
-    })
-    .then((pathInfo) => {
-      return pathInfo;
-    })
-    .catch((err) => {
-      if (err != null) {
-        pathInfo = {
-          data: "{" + err.toString() + "}",
-        };
-      } else {
-        pathInfo = {
-          data: err,
-        };
-      }
-
-      return pathInfo;
-    });
+  try {
+    await checkPath(directoryPath, goodPaths, badPaths, invisiblePaths, goodPathsRegex, badPathsRegex, invisiblePathsRegex);
+    return await getPathInfo(directoryPath, onlyFolders, onlyFiles);
+  } catch (err) {
+    let pathInfo;
+    if (err != null) {
+      pathInfo = {
+        data: "{" + err.toString() + "}",
+      };
+    } else {
+      pathInfo = {
+        data: err,
+      };
+    }
+    return pathInfo;
+  }
 }
-
 
 module.exports = doCheck;

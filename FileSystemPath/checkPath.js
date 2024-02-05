@@ -1,18 +1,63 @@
-const isPathAllowed = require("./isPathAllowed");
-
-function checkPath(pathToCheck) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const allowed = isPathAllowed(pathToCheck);
-      if (allowed === "Путь разрешен") {
-        resolve("Путь разрешен");
-      } else if (allowed === "Путь запрешен") {
-        reject(new Error("доступ запрешен"));
-      } else {
-        reject(null);
+// Функция для проверки пути
+function checkPath(path, goodPaths, badPaths, invisiblePaths, goodPathsRegex, badPathsRegex, invisiblePathsRegex) {
+    // Регулярное выражение разрешенных путей
+    const goodPathsRegexs = new RegExp(goodPathsRegex);
+  
+    // Регулярное выражение запрешенных путей
+    const badPathsRegexs = new RegExp(badPathsRegex);
+  
+    // Регулярное выражение невидимых путей путей
+    const invisiblePathsRegexs = new RegExp(invisiblePathsRegex);
+  
+    if (invisiblePathsRegexs.test(path)) {
+      return "Путь не найден";
+    }
+  
+    if (badPathsRegexs.test(path)) {
+      return "Путь запрешен";
+    }
+  
+    if (goodPathsRegexs.test(path)) {
+      return "Путь разрешен";
+    }
+  
+    for (let i = 0; i < invisiblePaths.length; i++) {
+      const allowedPath = invisiblePaths[i];
+  
+      const regex = new RegExp(
+        "^" + allowedPath + ".*$",
+        "i"
+      );
+      if (regex.test(path)) {
+        return "Путь не найден";
       }
-    }, 1000);
-  });
-}
+    }
+  
+    for (let i = 0; i < badPaths.length; i++) {
+      const allowedPath = badPaths[i];
+  
+      const regex = new RegExp(
+        "^" + allowedPath + ".*$",
+        "i"
+      );
+      if (regex.test(path)) {
+        return "Путь запрешен";
+      }
+    }
+  
+    for (let i = 0; i < goodPaths.length; i++) {
+      const allowedPath = goodPaths[i];
+  
+      const regex = new RegExp(
+        "^" + allowedPath + ".*$",
+        "i"
+      );
+      if (regex.test(path)) {
+        return "Путь разрешен";
+      }
+    }
+  
+    return "Путь не найден";
+  }
 
 module.exports = checkPath;
